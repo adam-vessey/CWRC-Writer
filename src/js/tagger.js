@@ -724,21 +724,17 @@ return function(writer) {
      */
     tagger.editStructureTag = function(tag, attributes) {
         // TODO add undo support
-        var id = tag.attr('id');
+        var tagName, id = tag.attr('id');
         attributes.id = id;
-        
         if (tag.attr('_tag') != attributes._tag) {
             // change the tag
-            var tagName;
             if (tag.parent().is('span')) {
                 // force inline if parent is inline
                 tagName = 'span';
             } else {
                 tagName = w.utilities.getTagForEditor(attributes._tag);
             }
-            
-            tag.contents().unwrap().wrapAll('<'+tagName+' id="'+id+'" />');
-            
+            tag.contents().wrapAll('<'+tagName+' id="'+id+'" />').parent().unwrap();
             tag = $('#'+id, w.editor.getBody());
             for (var key in attributes) {
                 if (key.match(/^_/) != null || w.converter.reservedAttributes[key] !== true) {
